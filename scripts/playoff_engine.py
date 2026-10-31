@@ -1,15 +1,19 @@
+
 """SNL playoff progression, independent of Excel formula caches.
 
 Scores are (away, home), matching Master Schedule columns H and I.
-None denotes an unplayed game.  Tied playoff scores are invalid.
+None denotes an unplayed game. Tied playoff scores are invalid.
 """
 from dataclasses import dataclass
 
 SERIES = {
-    'QF_3v6': (70, 72, 74), 'QF_4v5': (71, 73, 75),
-    'SF_1': (77, 79, 81), 'SF_2': (78, 80, 82),
-    'FINAL': (84, 85, 86),
+    'QF_3v6': (71, 73, 75),
+    'QF_4v5': (72, 74, 76),
+    'SF_1': (78, 80, 82),
+    'SF_2': (79, 81, 83),
+    'FINAL': (85, 86, 87),
 }
+
 
 @dataclass(frozen=True)
 class SeriesResult:
@@ -17,13 +21,12 @@ class SeriesResult:
     lower: str
     wins_higher: int
     wins_lower: int
-    game3: str  # 'potential', 'required', 'not_needed', 'completed'
+    game3: str  # potential, required, not_needed, completed
     winner: str | None
 
 
 def series_result(higher, lower, rows, scores):
     """rows=(G1,G2,G3), home sides alternate higher/lower/higher.
-
     Game 3 is treated as potential before two games are completed.
     """
     wins = {higher: 0, lower: 0}
@@ -60,7 +63,6 @@ def series_result(higher, lower, rows, scores):
 
 def bracket(seeds, scores):
     """Returns only determined series. seeds is list of six team names in rank order.
-
     A missing seed list means regular season is not finalized.
     """
     if seeds is None:
