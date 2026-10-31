@@ -1,3 +1,4 @@
+
 """Generate team iCalendar subscriptions from SNL Fall 26.xlsx without evaluating Excel formulas."""
 import argparse
 import datetime as dt
@@ -104,7 +105,6 @@ def parse_game_times(date, time_range):
 
     def parse(clock, period):
         return dt.datetime.strptime(clock + ' ' + period.upper(), '%I:%M %p').time()
-
     start = dt.datetime.combine(date, parse(first, first_period))
     end = dt.datetime.combine(date, parse(last, last_period))
     if end <= start:
@@ -173,7 +173,7 @@ def main():
     # Score-driven playoff matchups, never stale cached Excel formula outputs.
     seeds = official_seeds(rows)
     scores = {}
-    for r in range(70, 87):
+    for r in range(71, 88):
         if r in SERIES['QF_3v6'] + SERIES['QF_4v5'] + SERIES['SF_1'] + SERIES['SF_2'] + SERIES['FINAL']:
             raw = rows.get(r,{})
             a, h = str(raw.get('H','')).strip(), str(raw.get('I','')).strip()
@@ -192,11 +192,11 @@ def main():
             slot = int(float(source['D']))
             diamond = re.search(r'\d',source['E']).group()
             home,away = (result.lower,result.higher) if game_index==1 else (result.higher,result.lower)
-            uid = f'snl-playoff-row-{row_num}@sundaynightlights'
+            # Preserve original playoff event UIDs after the one-row shift.
+            uid = f'snl-playoff-row-{row_num - 1}@sundaynightlights'
             tentative = game_index == 2 and result.game3 == 'potential'
             games[home].append(emit_event(uid,date,slot,diamond,home,away,'Home',phase,tentative))
             games[away].append(emit_event(uid,date,slot,diamond,away,home,'Away',phase,tentative))
-
     # Until seeds or future matchups are known, preserve original neutral
     # playoff placeholders so every team sees the potential playoff weeks.
     phase_dates = {'Quarterfinals':'20270117','Semifinals':'20270124','Finals':'20270131'}
@@ -227,6 +227,7 @@ def main():
     links = '\n'.join(f'<li><a href="{name}">{team}</a></li>' for team, name in
                       [(team, f'SNL_{PREFIX[team]}_Fall_2026-27.ics') for team in TEAMS])
     (args.output / 'index.html').write_text('<!doctype html><html lang="en"><meta charset="utf-8"><title>SNL Team Calendars</title><h1>Sunday Night Lights — Fall 2026–27</h1><p>Subscribe to your team calendar using the .ics URL.</p><ul>' + links + '</ul></html>', encoding='utf-8')
+
 
 if __name__ == '__main__':
     main()
