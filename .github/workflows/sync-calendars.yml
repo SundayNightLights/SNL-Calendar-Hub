@@ -1,10 +1,10 @@
 
 name: Sync SNL Calendars
 
-# Manual synchronization only during testing.
-# Automatic 15-minute updates will be enabled later.
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '*/15 * * * *'
 
 permissions:
   contents: read
@@ -84,6 +84,7 @@ jobs:
 
           for team, filename in teams.items():
               path = output / filename
+
               content = path.read_text(
                   encoding="utf-8"
               )
