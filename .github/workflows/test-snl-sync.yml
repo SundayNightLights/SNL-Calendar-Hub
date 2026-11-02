@@ -1,0 +1,118 @@
+
+name: Test New SNL Calendar Sync
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install msal requests openpyxl
+
+      - name: Download new OneDrive master
+        env:
+          MS_CLIENT_ID: ${{ secrets.MS_CLIENT_ID }}
+          MSAL_CACHE: ${{ secrets.MSAL_CACHE }}
+        run: python scripts/download_onedrive.py
+
+      - name: Verify workbook structure
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from openpyxl import load_workbook
+
+          path = Path("SNL Fall 26.xlsx")
+          assert path.exists(), "OneDrive download missing"
+
+          wb = load_workbook(path, read_only=True)
+
+          required = [
+              "Regular Season Data",
+              "Playoff Data",
+              "Playoff Seeding"
+          ]
+
+          for name in required:
+              assert name in wb.sheetnames, (
+                  f"Missing worksheet: {name}"
+              )
+
+          for sheet, prefix, total in [
+              ("Regular Season Data", "F26-", 60),
+              ("Playoff Data", "F26-P", 15)
+          ]:
+              ws = wb[sheet]
+              ids = [
+                  str(ws.cell(r, 1).value).strip()
+                  for r in range(5, 5 + total)
+              ]
+
+              expected = [
+                  f"F26-{n:03d}"
+                  if total == 60
+                  else f"F26-P{n:02d}"
+                  for n in range(1, total + 1)
+              ]
+
+              assert ids == expected, (
+                  f"Game IDs incorrect in {sheet}"
+              )
+              print(f"{sheet}: {total} Game IDs verified")
+
+          wb.close()
+          print("Workbook structure passed")
+          PY
+
+      - name: Generate test calendars
+        run: |
+          python scripts/generate_calendars.py \
+            "SNL Fall 26.xlsx" \
+            --output test-output \
+            --reference reference
+
+      - name: Verify six team calendars
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          files = sorted(Path("test-output").glob("*.ics"))
+
+          assert len(files) == 6, (
+              f"Expected 6 calendars, found {len(files)}"
+          )
+
+          for file in files:
+              data = file.read_text(encoding="utf-8")
+              count = data.count("BEGIN:VEVENT")
+
+              assert count >= 20, (
+                  f"{file.name}: only {count} games"
+              )
+
+              assert "Markham Sports Dome" in data, (
+                  f"{file.name}: venue missing"
+              )
+
+              assert "Diamond" in data, (
+                  f"{file.name}: diamond missing"
+              )
+
+              print(f"{file.name}: {count} events passed")
+
+          print("ALL CALENDAR TESTS PASSED")
+          PY
