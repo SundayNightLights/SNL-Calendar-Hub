@@ -1,5 +1,5 @@
 
-"""Download the SNL master workbook from OneDrive."""
+"""Download the SNL Master workbook from OneDrive."""
 
 import io
 import os
@@ -10,13 +10,13 @@ from urllib.parse import quote
 import msal
 import requests
 
-# Name of the workbook stored in OneDrive
+
+# Workbook name in OneDrive and GitHub Actions
 ONEDRIVE_FILENAME = "SNL Master.xlsx"
+LOCAL_FILENAME = "SNL Master.xlsx"
 
-# Keep this name for the existing GitHub workflow
-LOCAL_FILENAME = "SNL Fall 26.xlsx"
 
-# Authenticate using existing GitHub secrets
+# Microsoft authentication
 cache = msal.SerializableTokenCache()
 cache.deserialize(os.environ["MSAL_CACHE"])
 
@@ -29,10 +29,13 @@ app = msal.PublicClientApplication(
 accounts = app.get_accounts()
 
 if not accounts:
-    raise RuntimeError("No Microsoft account in token cache")
+    raise RuntimeError(
+        "No Microsoft account found in token cache"
+    )
 
 result = app.acquire_token_silent_with_error(
-    ["Files.Read"], account=accounts[0]
+    ["Files.Read"],
+    account=accounts[0],
 )
 
 if not result or "access_token" not in result:
@@ -41,6 +44,7 @@ if not result or "access_token" not in result:
         + str((result or {}).get("error", "No token"))
     )
 
+
 session = requests.Session()
 session.headers.update({
     "Authorization": "Bearer " + result["access_token"]
@@ -48,11 +52,14 @@ session.headers.update({
 
 BASE = "https://graph.microsoft.com/v1.0/me/drive"
 
+
 def get_items(url):
-    """Read every page of a OneDrive folder."""
+    """Read all items from a OneDrive folder."""
+
     while url:
         response = session.get(url, timeout=90)
         response.raise_for_status()
+
         data = response.json()
 
         for item in data.get("value", []):
@@ -61,7 +68,7 @@ def get_items(url):
         url = data.get("@odata.nextLink")
 
 
-# Search actual folders rather than the search index
+# Search OneDrive folders and subfolders
 folders = [(BASE + "/root/children", "")]
 matches = []
 excel_files = []
@@ -75,58 +82,65 @@ while folders:
 
         if "folder" in item:
             folder_id = quote(item["id"], safe="")
+
             folders.append((
                 f"{BASE}/items/{folder_id}/children",
-                path
+                path,
             ))
 
         elif "file" in item:
             if name.lower().endswith(".xlsx"):
                 excel_files.append(path)
 
-            if name.casefold() == ONEDRIVE_FILENAME.casefold():
+            if (
+                name.casefold()
+                == ONEDRIVE_FILENAME.casefold()
+            ):
                 matches.append((item, path))
 
 
-# Stop safely if file cannot be identified
+# Verify exactly one workbook was found
 if len(matches) != 1:
-    print("\nExcel workbooks visible in OneDrive:")
+    print("Excel workbooks found in OneDrive:")
 
     for path in sorted(excel_files)[:60]:
         print(" ", path)
 
     raise RuntimeError(
-        f"Expected one workbook named "
+        f"Expected exactly one workbook named "
         f"{ONEDRIVE_FILENAME!r}, "
-        f"but found {len(matches)}. "
-        "Check the filename and OneDrive account."
+        f"but found {len(matches)}."
     )
 
 
 item, path = matches[0]
 print("Found workbook:", path)
 
-# Download by its OneDrive item ID
-file_id = quote(item["id"], safe="")
 
+# Download the workbook
+file_id = quote(item["id"], safe="")
 url = f"{BASE}/items/{file_id}/content"
 
 response = session.get(url, timeout=90)
 response.raise_for_status()
 
-# Verify the Excel file
-with zipfile.ZipFile(io.BytesIO(response.content)) as z:
+
+# Verify it is a valid Excel workbook
+with zipfile.ZipFile(
+    io.BytesIO(response.content)
+) as z:
     if "xl/workbook.xml" not in z.namelist():
         raise ValueError(
             "Downloaded file is not a valid Excel workbook"
         )
 
-# Save using the name expected by the workflow
+
+# Save with permanent filename
 Path(LOCAL_FILENAME).write_bytes(response.content)
 
 print(
     "Workbook downloaded successfully:",
     LOCAL_FILENAME,
     len(response.content),
-    "bytes"
+    "bytes",
 )

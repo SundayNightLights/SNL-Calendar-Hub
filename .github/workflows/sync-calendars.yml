@@ -1,6 +1,8 @@
 
 name: Sync SNL Calendars
 
+# Manual synchronization only during testing.
+# Automatic 15-minute updates will be enabled later.
 on:
   workflow_dispatch:
 
@@ -16,6 +18,7 @@ concurrency:
 jobs:
   sync:
     runs-on: ubuntu-latest
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -24,45 +27,152 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: python -m pip install msal requests openpyxl
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
-      - name: Download Excel workbook from OneDrive
+      - name: Install dependencies
+        run: |
+          python -m pip install msal requests openpyxl
+
+      - name: Download SNL Master from OneDrive
         env:
           MS_CLIENT_ID: ${{ secrets.MS_CLIENT_ID }}
           MSAL_CACHE: ${{ secrets.MSAL_CACHE }}
-        run: python scripts/download_onedrive.py
+        run: |
+          python scripts/download_onedrive.py
 
       - name: Generate six team calendars
         run: |
+          rm -rf public
+
           python scripts/generate_calendars.py \
-            "SNL Fall 26.xlsx" \
+            "SNL Master.xlsx" \
             --output public \
             --reference reference
 
-      - name: Create calendar website
+      - name: Verify six permanent team calendars
         run: |
           python - <<'PY'
           from pathlib import Path
-          files = sorted(Path("public").glob("*.ics"))
-          if len(files) != 6:
-              raise SystemExit(f"Expected 6 calendars, found {len(files)}")
-          links = "\n".join(
-              f'<li><a href="{f.name}">{f.stem.replace("_", " ")}</a></li>'
-              for f in files
-          )
-          Path("public/index.html").write_text(
-              "<!doctype html><html><head><meta charset='utf-8'>"
-              "<title>Sunday Night Lights Calendars</title></head>"
-              "<body><h1>Sunday Night Lights — Fall 2026-27</h1>"
-              "<p>Subscribe to your team's calendar:</p><ul>"
-              + links + "</ul></body></html>",
-              encoding="utf-8",
-          )
+
+          output = Path("public")
+
+          teams = {
+              "Buffaloes": "Buffaloes.ics",
+              "IHT": "IHT.ics",
+              "MORSL": "MORSL.ics",
+              "Outcasts": "Outcasts.ics",
+              "Pacific Maul": "Pacific_Maul.ics",
+              "Toronto Raccoons": "Toronto_Raccoons.ics",
+          }
+
+          actual = {
+              file.name
+              for file in output.glob("*.ics")
+          }
+
+          expected = set(teams.values())
+
+          if actual != expected:
+              raise SystemExit(
+                  f"Calendar filenames incorrect. "
+                  f"Expected {sorted(expected)}, "
+                  f"found {sorted(actual)}"
+              )
+
+          for team, filename in teams.items():
+              path = output / filename
+              content = path.read_text(
+                  encoding="utf-8"
+              )
+
+              count = content.count("BEGIN:VEVENT")
+
+              if count < 20:
+                  raise SystemExit(
+                      f"{filename}: only {count} events"
+                  )
+
+              if f"X-WR-CALNAME:{team}" not in content:
+                  raise SystemExit(
+                      f"{filename}: wrong calendar name"
+                  )
+
+              if "Markham Sports Dome" not in content:
+                  raise SystemExit(
+                      f"{filename}: venue missing"
+                  )
+
+              if "UID:" not in content:
+                  raise SystemExit(
+                      f"{filename}: event IDs missing"
+                  )
+
+              print(
+                  f"VERIFIED: {filename} "
+                  f"({count} events)"
+              )
+
+          print("All six SNL calendars verified")
           PY
 
-      - name: Add subscription page
-        run: cp subscribe.html public/subscribe.html
+      - name: Add subscription website
+        run: |
+          cp subscribe.html public/subscribe.html
+
+      - name: Verify website before publishing
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          output = Path("public")
+
+          required = [
+              "index.html",
+              "subscribe.html",
+              "Buffaloes.ics",
+              "IHT.ics",
+              "MORSL.ics",
+              "Outcasts.ics",
+              "Pacific_Maul.ics",
+              "Toronto_Raccoons.ics",
+          ]
+
+          for filename in required:
+              if not (output / filename).is_file():
+                  raise SystemExit(
+                      f"Missing publication file: {filename}"
+                  )
+
+          page = (
+              output / "subscribe.html"
+          ).read_text(encoding="utf-8")
+
+          if "Select your team" not in page:
+              raise SystemExit(
+                  "Missing team selector"
+              )
+
+          if 'team.value + ".ics"' not in page:
+              raise SystemExit(
+                  "Subscription links not updated"
+              )
+
+          if "Schedules-Fall-26" in page:
+              raise SystemExit(
+                  "Old repository URL found"
+              )
+
+          if "_Fall_2026-27.ics" in page:
+              raise SystemExit(
+                  "Old calendar filename found"
+              )
+
+          print("Subscription website verified")
+          print("All publication files are ready")
+          PY
 
       - name: Upload GitHub Pages files
         uses: actions/upload-pages-artifact@v3
