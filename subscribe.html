@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -5,114 +6,353 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#122b4a">
   <title>Sunday Night Lights | Team Calendar Subscription</title>
+
   <style>
-    :root { color-scheme: light; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
-    * { box-sizing: border-box; }
-    body { margin: 0; background: #f2f5f9; color: #17283d; }
-    header { background: #122b4a; color: white; text-align: center; padding: 32px 18px; }
-    header h1 { font-size: 1.65rem; letter-spacing: .06em; margin: 0 0 8px; }
-    header p { margin: 0; opacity: .9; }
-    main { max-width: 600px; margin: 28px auto; padding: 0 16px 40px; }
-    .panel { background: white; border-radius: 16px; padding: 26px; box-shadow: 0 4px 22px #15283c16; }
-    label { display: block; font-weight: 700; margin-bottom: 10px; }
-    select, button { font: inherit; width: 100%; border-radius: 9px; min-height: 48px; }
-    select { padding: 10px 14px; border: 1px solid #b9c6d4; background: white; }
-    button { border: 0; background: #174d8b; color: white; font-weight: 700; cursor: pointer; padding: 12px; margin-top: 16px; }
-    button:disabled { background: #9ba9b9; cursor: not-allowed; }
-    h2 { font-size: 1.25rem; margin: 0 0 14px; }
-    h3 { font-size: 1rem; margin: 20px 0 8px; }
-    p, li { line-height: 1.55; }
-    .hidden { display: none; }
-    .muted { color: #586b7f; font-size: .9rem; }
-    .url { overflow-wrap: anywhere; background: #f3f6fa; border: 1px solid #dce4ed; padding: 12px; border-radius: 8px; font-size: .84rem; }
-    .secondary { background: #e8f0fa; color: #143c6c; border: 1px solid #aac4df; }
-    .status { min-height: 1.5em; font-size: .9rem; }
-    a { color: #12529b; }
+    :root {
+      color-scheme: light;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #f2f5f9;
+      color: #17283d;
+    }
+
+    header {
+      background: #122b4a;
+      color: white;
+      text-align: center;
+      padding: 32px 18px;
+    }
+
+    header h1 {
+      font-size: 1.65rem;
+      letter-spacing: .06em;
+      margin: 0 0 8px;
+    }
+
+    header p {
+      margin: 0;
+      opacity: .9;
+    }
+
+    main {
+      max-width: 600px;
+      margin: 28px auto;
+      padding: 0 16px 40px;
+    }
+
+    .panel {
+      background: white;
+      border-radius: 16px;
+      padding: 26px;
+      box-shadow: 0 4px 22px #15283c16;
+    }
+
+    label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    select,
+    button {
+      font: inherit;
+      width: 100%;
+      border-radius: 9px;
+      min-height: 48px;
+    }
+
+    select {
+      padding: 10px 14px;
+      border: 1px solid #b9c6d4;
+      background: white;
+    }
+
+    button {
+      border: 0;
+      background: #174d8b;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 12px;
+      margin-top: 16px;
+    }
+
+    button:disabled {
+      background: #9ba9b9;
+      cursor: not-allowed;
+    }
+
+    h2 {
+      font-size: 1.25rem;
+      margin: 0 0 14px;
+    }
+
+    h3 {
+      font-size: 1rem;
+      margin: 20px 0 8px;
+    }
+
+    p,
+    li {
+      line-height: 1.55;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .muted {
+      color: #586b7f;
+      font-size: .9rem;
+    }
+
+    .url {
+      overflow-wrap: anywhere;
+      background: #f3f6fa;
+      border: 1px solid #dce4ed;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: .84rem;
+    }
+
+    .secondary {
+      background: #e8f0fa;
+      color: #143c6c;
+      border: 1px solid #aac4df;
+    }
+
+    .status {
+      min-height: 1.5em;
+      font-size: .9rem;
+    }
+
+    a {
+      color: #12529b;
+    }
   </style>
 </head>
+
 <body>
   <header>
     <h1>SUNDAY NIGHT LIGHTS</h1>
     <p>Team Calendar Subscription</p>
   </header>
+
   <main>
     <section class="panel">
+
       <div id="choose">
         <label for="team">Select your team</label>
+
         <select id="team" required>
-          <option value="" selected disabled>Choose your team</option>
+          <option value="" selected disabled>
+            Choose your team
+          </option>
           <option value="Buffaloes">Buffaloes</option>
           <option value="IHT">IHT</option>
           <option value="MORSL">MORSL</option>
           <option value="Outcasts">Outcasts</option>
           <option value="Pacific_Maul">Pacific Maul</option>
-          <option value="Toronto_Raccoons">Toronto Raccoons</option>
+          <option value="Toronto_Raccoons">
+            Toronto Raccoons
+          </option>
         </select>
-        <button id="continue" type="button" disabled>Continue to Subscribe</button>
+
+        <button id="continue" type="button" disabled>
+          Continue to Subscribe
+        </button>
       </div>
+
       <div id="instructions" class="hidden">
+
         <h2 id="selectedTitle"></h2>
-        <p>Subscribe using your calendar app to receive schedule updates.</p>
+
+        <p>
+          Subscribe to your team's calendar to
+          receive automatic schedule updates.
+        </p>
+
         <h3>Google Calendar</h3>
+
         <ol>
           <li>Copy your team's subscription URL below.</li>
-          <li>Open <a href="https://calendar.google.com/calendar/u/0/r/settings/addbyurl" target="_blank" rel="noopener noreferrer">Google Calendar in a browser</a> (desktop view may be required).</li>
-          <li>Under <strong>Other calendars</strong>, choose <strong>From URL</strong>, paste the link and select <strong>Add calendar</strong>.</li>
+          <li>
+            Open
+            <a
+              href="https://calendar.google.com/calendar/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >Google Calendar</a>
+            in a browser.
+          </li>
+          <li>
+            Under <strong>Other calendars</strong>,
+            click the plus (+) icon and choose
+            <strong>From URL</strong>.
+          </li>
+          <li>
+            Paste your subscription URL and
+            select <strong>Add calendar</strong>.
+          </li>
         </ol>
+
         <h3>Apple Calendar</h3>
-        <p>In Calendar, choose <strong>Add Subscription Calendar</strong> and paste the subscription URL. Do not use Import.</p>
+
+        <p>
+          Open Calendar, select
+          <strong>Add Subscription Calendar</strong>,
+          and paste the subscription URL below.
+        </p>
+
         <h3>Outlook</h3>
-        <p>In Outlook Calendar, choose <strong>Add calendar</strong> → <strong>Subscribe from web</strong>, then paste the URL.</p>
-        <p class="muted">Subscription URL (copy this; do not download or import the file):</p>
+
+        <p>
+          Open
+          <a
+            href="https://outlook.live.com/calendar/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >Outlook Calendar</a>,
+          choose <strong>Add calendar</strong>,
+          then <strong>Subscribe from web</strong>.
+          Paste your subscription URL and confirm.
+        </p>
+
+        <p class="muted">
+          Your team's subscription URL:
+        </p>
+
         <div id="url" class="url"></div>
-        <button id="copy" type="button">Copy Subscription URL</button>
-        <div id="copyStatus" class="status" role="status" aria-live="polite"></div>
-        <button id="back" type="button" class="secondary">Choose a Different Team</button>
-        <p class="muted">Subscribed calendars refresh according to your calendar provider's schedule. Updates may not appear immediately.</p>
+
+        <button id="copy" type="button">
+          Copy Subscription URL
+        </button>
+
+        <div
+          id="copyStatus"
+          class="status"
+          role="status"
+          aria-live="polite"
+        ></div>
+
+        <button
+          id="back"
+          type="button"
+          class="secondary"
+        >
+          Choose a Different Team
+        </button>
+
+        <p class="muted">
+          Your calendar app controls how often
+          subscribed calendars refresh.
+          Schedule updates may not appear immediately.
+        </p>
+
       </div>
+
     </section>
   </main>
+
   <script>
-    const team = document.getElementById('team');
-    const next = document.getElementById('continue');
-    const choose = document.getElementById('choose');
-    const instructions = document.getElementById('instructions');
-    const urlBox = document.getElementById('url');
-    const status = document.getElementById('copyStatus');
-    const base = 'https://sundaynightlights.github.io/Schedules-Fall-26/';
-    let subscriptionUrl = '';
-    team.addEventListener('change', () => { next.disabled = !team.value; });
-    next.addEventListener('click', () => {
-      if (!team.value) return;
-      const label = team.options[team.selectedIndex].text;
-      subscriptionUrl = base + 'SNL_' + team.value + '_Fall_2026-27.ics';
-      document.getElementById('selectedTitle').textContent = label + ' Calendar';
+    const team = document.getElementById("team");
+    const next = document.getElementById("continue");
+    const choose = document.getElementById("choose");
+    const instructions = document.getElementById("instructions");
+    const urlBox = document.getElementById("url");
+    const status = document.getElementById("copyStatus");
+
+    // Automatically use the current website folder.
+    // No hardcoded repository name is needed.
+    const base = new URL(".", window.location.href).href;
+
+    let subscriptionUrl = "";
+
+    // Start with no selected team.
+    team.value = "";
+    next.disabled = true;
+
+    team.addEventListener("change", () => {
+      next.disabled = !team.value;
+    });
+
+    next.addEventListener("click", () => {
+      if (!team.value) {
+        return;
+      }
+
+      const label =
+        team.options[team.selectedIndex].text;
+
+      // Permanent, season-neutral calendar filename.
+      // Example: Buffaloes.ics
+      subscriptionUrl = new URL(
+        team.value + ".ics",
+        base
+      ).href;
+
+      document.getElementById(
+        "selectedTitle"
+      ).textContent = label + " Calendar";
+
       urlBox.textContent = subscriptionUrl;
-      status.textContent = '';
-      choose.classList.add('hidden');
-      instructions.classList.remove('hidden');
+
+      status.textContent = "";
+
+      choose.classList.add("hidden");
+      instructions.classList.remove("hidden");
     });
-    document.getElementById('back').addEventListener('click', () => {
-      team.value = '';
+
+    document.getElementById(
+      "back"
+    ).addEventListener("click", () => {
+      team.value = "";
       next.disabled = true;
-      instructions.classList.add('hidden');
-      choose.classList.remove('hidden');
+
+      instructions.classList.add("hidden");
+      choose.classList.remove("hidden");
+
+      status.textContent = "";
     });
-    document.getElementById('copy').addEventListener('click', async () => {
+
+    document.getElementById(
+      "copy"
+    ).addEventListener("click", async () => {
       try {
-        await navigator.clipboard.writeText(subscriptionUrl);
-        status.textContent = 'Subscription URL copied.';
+        await navigator.clipboard.writeText(
+          subscriptionUrl
+        );
+
+        status.textContent =
+          "Subscription URL copied.";
+
       } catch (_) {
-        const input = document.createElement('textarea');
+        const input = document.createElement(
+          "textarea"
+        );
+
         input.value = subscriptionUrl;
         document.body.appendChild(input);
         input.select();
-        const ok = document.execCommand('copy');
+
+        const ok = document.execCommand("copy");
         input.remove();
-        status.textContent = ok ? 'Subscription URL copied.' : 'Please select and copy the URL shown above.';
+
+        status.textContent = ok
+          ? "Subscription URL copied."
+          : "Please select and copy the URL above.";
       }
     });
-    // Intentionally ignore ?team=... so no team is ever preselected.
+
+    // URL query parameters are intentionally ignored.
+    // No team is automatically preselected.
   </script>
 </body>
 </html>
