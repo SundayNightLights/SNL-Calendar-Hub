@@ -52,11 +52,12 @@ jobs:
                   f"Missing worksheet: {name}"
               )
 
-          for sheet, prefix, total in [
-              ("Regular Season Data", "F26-", 60),
-              ("Playoff Data", "F26-P", 15)
+          for sheet, total in [
+              ("Regular Season Data", 60),
+              ("Playoff Data", 15)
           ]:
               ws = wb[sheet]
+
               ids = [
                   str(ws.cell(r, 1).value).strip()
                   for r in range(5, 5 + total)
@@ -72,17 +73,22 @@ jobs:
               assert ids == expected, (
                   f"Game IDs incorrect in {sheet}"
               )
-              print(f"{sheet}: {total} Game IDs verified")
+
+              print(
+                  f"{sheet}: {total} Game IDs verified"
+              )
 
           wb.close()
           print("Workbook structure passed")
           PY
 
-      - name: Generate test calendars
+      - name: Generate fresh test calendars
         run: |
+          rm -rf public
+
           python scripts/generate_calendars.py \
             "SNL Fall 26.xlsx" \
-            --output test-output \
+            --output public \
             --reference reference
 
       - name: Verify six team calendars
@@ -90,14 +96,28 @@ jobs:
           python - <<'PY'
           from pathlib import Path
 
-          files = sorted(Path("test-output").glob("*.ics"))
+          output = Path("public")
+          files = sorted(output.glob("*.ics"))
 
-          assert len(files) == 6, (
-              f"Expected 6 calendars, found {len(files)}"
-          )
+          print("Calendar output directory:", output)
+          print("Calendars found:", len(files))
+
+          for file in files:
+              print("Found:", file.name)
+
+          if len(files) != 6:
+              print("\nDiagnostic: ICS files elsewhere:")
+              for file in Path(".").rglob("*.ics"):
+                  print(" ", file)
+
+              raise AssertionError(
+                  f"Expected 6 calendars, "
+                  f"found {len(files)}"
+              )
 
           for file in files:
               data = file.read_text(encoding="utf-8")
+
               count = data.count("BEGIN:VEVENT")
 
               assert count >= 20, (
@@ -112,7 +132,14 @@ jobs:
                   f"{file.name}: diamond missing"
               )
 
-              print(f"{file.name}: {count} events passed")
+              assert "UID:" in data, (
+                  f"{file.name}: event IDs missing"
+              )
 
-          print("ALL CALENDAR TESTS PASSED")
+              print(
+                  f"PASSED: {file.name} "
+                  f"({count} scheduled events)"
+              )
+
+          print("ALL SIX SNL CALENDARS VERIFIED")
           PY
