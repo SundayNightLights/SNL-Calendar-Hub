@@ -1,5 +1,5 @@
 
-"""Generate SNL team calendars from the Excel Master workbook."""
+"""Generate season-neutral SNL team calendars from SNL Master.xlsx."""
 
 import argparse
 import datetime as dt
@@ -24,8 +24,8 @@ TEAMS = (
 )
 
 PREFIX = {
-    name: name.replace(" ", "_")
-    for name in TEAMS
+    team: team.replace(" ", "_")
+    for team in TEAMS
 }
 
 TZ = "America/Toronto"
@@ -44,7 +44,7 @@ PLAYOFF_ROWS = (
 
 
 def read_sheet(path, name):
-    """Read cached cell values by worksheet name."""
+    """Read saved Excel values by worksheet name."""
 
     with zipfile.ZipFile(path) as z:
         shared = []
@@ -147,7 +147,7 @@ def read_sheet(path, name):
 
 
 def legacy_rows(regular, playoffs):
-    """Map Game IDs to original calendar row IDs."""
+    """Preserve historical game identities and event UIDs."""
 
     headers = {
         "A": "Game ID",
@@ -162,10 +162,10 @@ def legacy_rows(regular, playoffs):
         "J": "Home Score",
     }
 
-    for name, sheet in [
+    for name, sheet in (
         ("Regular Season Data", regular),
         ("Playoff Data", playoffs),
-    ]:
+    ):
         for col, label in headers.items():
             actual = str(
                 sheet.get(4, {}).get(col, "")
@@ -173,8 +173,9 @@ def legacy_rows(regular, playoffs):
 
             if actual != label:
                 raise ValueError(
-                    f"{name}: expected {label!r} "
-                    f"in column {col}; found {actual!r}"
+                    f"{name} column {col}: "
+                    f"expected {label!r}, "
+                    f"found {actual!r}"
                 )
 
     def convert(record):
@@ -190,7 +191,7 @@ def legacy_rows(regular, playoffs):
         }
 
     rows = {}
-    ids = set()
+    regular_ids = set()
 
     for record in regular.values():
         game_id = str(
@@ -208,16 +209,16 @@ def legacy_rows(regular, playoffs):
 
         if (
             not 1 <= number <= 60
-            or game_id in ids
+            or game_id in regular_ids
         ):
             raise ValueError(
                 f"Invalid or duplicate Game ID: {game_id}"
             )
 
-        ids.add(game_id)
+        regular_ids.add(game_id)
 
-        # Preserve original historical row mapping,
-        # including the holiday break after game 48.
+        # Preserve the original game identities.
+        # The old holiday row followed game 48.
         original_row = (
             number + 4 + (number >= 49)
         )
@@ -242,13 +243,13 @@ def legacy_rows(regular, playoffs):
         for n in range(1, 61)
     }
 
-    if ids != expected:
+    if regular_ids != expected:
         raise ValueError(
             "Missing regular-season Game IDs: "
-            + str(sorted(expected - ids))
+            + str(sorted(expected - regular_ids))
         )
 
-    ids = set()
+    playoff_ids = set()
 
     for record in playoffs.values():
         game_id = str(
@@ -266,14 +267,13 @@ def legacy_rows(regular, playoffs):
 
         if (
             not 1 <= number <= 15
-            or game_id in ids
+            or game_id in playoff_ids
         ):
             raise ValueError(
-                f"Invalid or duplicate playoff ID: "
-                f"{game_id}"
+                f"Invalid playoff Game ID: {game_id}"
             )
 
-        ids.add(game_id)
+        playoff_ids.add(game_id)
 
         original_row = PLAYOFF_ROWS[number - 1]
 
@@ -284,17 +284,17 @@ def legacy_rows(regular, playoffs):
         for n in range(1, 16)
     }
 
-    if ids != expected:
+    if playoff_ids != expected:
         raise ValueError(
             "Missing playoff Game IDs: "
-            + str(sorted(expected - ids))
+            + str(sorted(expected - playoff_ids))
         )
 
     return rows
 
 
 def read_draw(sheet):
-    """Read manually entered random draw orders."""
+    """Read manually entered final tie-break orders."""
 
     draw = {}
 
@@ -306,7 +306,7 @@ def read_draw(sheet):
         if team not in TEAMS:
             raise ValueError(
                 f"Invalid Playoff Seeding team "
-                f"on row {row}"
+                f"on row {row}: {team!r}"
             )
 
         value = str(
@@ -341,7 +341,7 @@ def escape(value):
 
 
 def fold(line):
-    """Fold iCalendar lines at UTF-8 byte limits."""
+    """Fold iCalendar lines safely."""
 
     chunks = []
     buf = ""
@@ -364,7 +364,7 @@ def fold(line):
 
 
 def times(date, time_range, slot):
-    """Convert workbook game times to calendar times."""
+    """Convert workbook times to calendar times."""
 
     if (
         time_range
@@ -520,9 +520,9 @@ def event(
         ),
         f"DESCRIPTION:{escape(description)}",
         (
-            'STATUS:TENTATIVE'
+            "STATUS:TENTATIVE"
             if tentative
-            else 'STATUS:CONFIRMED'
+            else "STATUS:CONFIRMED"
         ),
         "END:VEVENT",
     ]
@@ -530,6 +530,42 @@ def event(
     return "\r\n".join(
         fold(line) for line in fields
     )
+
+
+def reference_calendar(folder, team):
+    """Find existing reference calendars by team.
+
+    Supports both the new short filenames and
+    previously published reference filenames.
+    """
+
+    current = (
+        folder / f"{PREFIX[team]}.ics"
+    )
+
+    if current.exists():
+        return current
+
+    pattern = re.compile(
+        r"(?:^|_)"
+        + re.escape(PREFIX[team])
+        + r"(?:_|$)",
+        re.I,
+    )
+
+    matches = [
+        path
+        for path in folder.glob("*.ics")
+        if pattern.search(path.stem)
+    ]
+
+    if len(matches) > 1:
+        raise ValueError(
+            f"More than one reference "
+            f"calendar for {team}: {matches}"
+        )
+
+    return matches[0] if matches else None
 
 
 def main():
@@ -554,7 +590,6 @@ def main():
 
     args = parser.parse_args()
 
-    # Read the three actual workbook sources.
     regular = read_sheet(
         args.workbook,
         "Regular Season Data",
@@ -575,14 +610,14 @@ def main():
         playoffs,
     )
 
-    # Use original published event identifiers.
+    # Preserve the original published game UIDs.
     uid_path = (
         args.reference / "game_uids.json"
     )
 
     if not uid_path.exists():
         raise FileNotFoundError(
-            f"Missing historical UID registry: "
+            f"Missing original UID registry: "
             f"{uid_path}"
         )
 
@@ -598,7 +633,7 @@ def main():
         or len(set(original_uids.values())) != 60
     ):
         raise ValueError(
-            "Historical UID registry must "
+            "Original UID registry must "
             "contain 60 unique games"
         )
 
@@ -642,7 +677,7 @@ def main():
             )
         )
 
-    # Calculate playoff seeds from scores.
+    # Calculate playoff seeds from the scores.
     seeds = official_seeds(
         rows,
         read_draw(seeding),
@@ -650,8 +685,8 @@ def main():
 
     if seeds is None:
         print(
-            "Playoff seeds pending; "
-            "preserving existing playoff placeholders."
+            "Playoff seeding pending; "
+            "using neutral placeholders."
         )
 
     scores = {}
@@ -682,7 +717,6 @@ def main():
                 int(home),
             )
 
-    # Generate confirmed playoff matchups.
     rounds = bracket(
         seeds,
         scores,
@@ -748,22 +782,18 @@ def main():
                 )
             )
 
-    # Preserve neutral playoff placeholders
-    # until each team's opponent is known.
+    # Preserve playoff placeholders from
+    # the existing reference calendar files.
     for team in TEAMS:
-        filename = (
-            f"SNL_{PREFIX[team]}"
-            f"_Fall_2026-27.ics"
+        prior = reference_calendar(
+            args.reference,
+            team,
         )
 
-        old_file = (
-            args.reference / filename
-        )
-
-        if not old_file.exists():
+        if prior is None:
             continue
 
-        original = old_file.read_text(
+        original = prior.read_text(
             encoding="utf-8-sig"
         )
 
@@ -796,10 +826,9 @@ def main():
                 None,
             )
 
-            if not phase:
+            if phase is None:
                 continue
 
-            # Don't duplicate actual playoff games.
             if any(
                 f"Sunday Night Lights — {phase}"
                 in existing
@@ -815,26 +844,24 @@ def main():
                 )
             )
 
-    # Write the six new calendar files.
+    # Write six season-neutral calendar files.
     args.output.mkdir(
         parents=True,
         exist_ok=True,
     )
 
     for team, entries in games.items():
-        filename = (
-            f"SNL_{PREFIX[team]}"
-            f"_Fall_2026-27.ics"
-        )
 
-        # Calendar display names use ONLY the team name.
-        # Existing filenames and subscription links are unchanged.
-        lines = [
+        # Example: Buffaloes.ics
+        filename = f"{PREFIX[team]}.ics"
+
+        # Calendar displays just the team name.
+        header = [
             "BEGIN:VCALENDAR",
             "VERSION:2.0",
             (
-                "PRODID:-//SNL//"
-                "Team Schedules 2026-27//EN"
+                "PRODID:-//Sunday Night Lights//"
+                "Team Calendar//EN"
             ),
             "CALSCALE:GREGORIAN",
             "METHOD:PUBLISH",
@@ -844,16 +871,14 @@ def main():
         ]
 
         content = "\r\n".join(
-            lines
+            header
             + entries
             + ["END:VCALENDAR", ""]
         )
 
-        output_file = (
+        (
             args.output / filename
-        )
-
-        output_file.write_bytes(
+        ).write_bytes(
             content.encode("utf-8")
         )
 
@@ -862,11 +887,10 @@ def main():
             f"{len(entries)} events"
         )
 
-    # Create an index for the six calendars.
+    # Create a basic calendar index.
     links = "\n".join(
         (
-            f'<li><a href="SNL_'
-            f'{PREFIX[team]}_Fall_2026-27.ics">'
+            f'<li><a href="{PREFIX[team]}.ics">'
             f'{team}</a></li>'
         )
         for team in TEAMS
@@ -874,9 +898,10 @@ def main():
 
     index = (
         '<!doctype html>'
-        '<html><meta charset="utf-8">'
+        '<html lang="en">'
+        '<meta charset="utf-8">'
         '<title>Sunday Night Lights Calendars</title>'
-        '<h1>Sunday Night Lights — Fall 2026–27</h1>'
+        '<h1>Sunday Night Lights — Team Calendars</h1>'
         '<ul>'
         + links
         + '</ul></html>'
@@ -890,7 +915,8 @@ def main():
     )
 
     print(
-        "Finished generating six SNL calendars."
+        "Finished generating six permanent "
+        "SNL team calendars."
     )
 
 
