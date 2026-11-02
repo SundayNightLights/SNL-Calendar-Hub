@@ -827,6 +827,8 @@ def main():
             f"_Fall_2026-27.ics"
         )
 
+        # Calendar display names use ONLY the team name.
+        # Existing filenames and subscription links are unchanged.
         lines = [
             "BEGIN:VCALENDAR",
             "VERSION:2.0",
@@ -836,12 +838,8 @@ def main():
             ),
             "CALSCALE:GREGORIAN",
             "METHOD:PUBLISH",
-            (
-                "X-WR-CALNAME:"
-                + escape(
-                    f"SNL – {team} – Fall 2026–27"
-                )
-            ),
+            f"NAME:{escape(team)}",
+            f"X-WR-CALNAME:{escape(team)}",
             f"X-WR-TIMEZONE:{TZ}",
         ]
 
