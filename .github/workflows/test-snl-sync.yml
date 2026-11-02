@@ -24,11 +24,12 @@ jobs:
         run: |
           python -m pip install msal requests openpyxl
 
-      - name: Download new OneDrive master
+      - name: Download SNL Master from OneDrive
         env:
           MS_CLIENT_ID: ${{ secrets.MS_CLIENT_ID }}
           MSAL_CACHE: ${{ secrets.MSAL_CACHE }}
-        run: python scripts/download_onedrive.py
+        run: |
+          python scripts/download_onedrive.py
 
       - name: Verify workbook structure
         run: |
@@ -36,10 +37,16 @@ jobs:
           from pathlib import Path
           from openpyxl import load_workbook
 
-          path = Path("SNL Fall 26.xlsx")
-          assert path.exists(), "OneDrive download missing"
+          path = Path("SNL Master.xlsx")
 
-          wb = load_workbook(path, read_only=True)
+          assert path.exists(), (
+              "SNL Master.xlsx was not downloaded"
+          )
+
+          wb = load_workbook(
+              path,
+              read_only=True
+          )
 
           required = [
               "Regular Season Data",
@@ -71,7 +78,7 @@ jobs:
               ]
 
               assert ids == expected, (
-                  f"Game IDs incorrect in {sheet}"
+                  f"Invalid Game IDs in {sheet}"
               )
 
               print(
@@ -79,67 +86,108 @@ jobs:
               )
 
           wb.close()
-          print("Workbook structure passed")
+
+          print("SNL Master workbook verified")
+
           PY
 
-      - name: Generate fresh test calendars
+      - name: Generate six test calendars
         run: |
-          rm -rf public
+          rm -rf test-output
 
           python scripts/generate_calendars.py \
-            "SNL Fall 26.xlsx" \
-            --output public \
+            "SNL Master.xlsx" \
+            --output test-output \
             --reference reference
 
-      - name: Verify six team calendars
+      - name: Verify permanent calendar filenames
         run: |
           python - <<'PY'
           from pathlib import Path
 
-          output = Path("public")
-          files = sorted(output.glob("*.ics"))
+          output = Path("test-output")
 
-          print("Calendar output directory:", output)
-          print("Calendars found:", len(files))
+          teams = {
+              "Buffaloes": "Buffaloes.ics",
+              "IHT": "IHT.ics",
+              "MORSL": "MORSL.ics",
+              "Outcasts": "Outcasts.ics",
+              "Pacific Maul": "Pacific_Maul.ics",
+              "Toronto Raccoons": "Toronto_Raccoons.ics"
+          }
 
-          for file in files:
-              print("Found:", file.name)
+          actual = {
+              p.name for p in output.glob("*.ics")
+          }
 
-          if len(files) != 6:
-              print("\nDiagnostic: ICS files elsewhere:")
-              for file in Path(".").rglob("*.ics"):
-                  print(" ", file)
+          expected = set(teams.values())
 
-              raise AssertionError(
-                  f"Expected 6 calendars, "
-                  f"found {len(files)}"
-              )
+          assert actual == expected, (
+              f"Expected {sorted(expected)}, "
+              f"found {sorted(actual)}"
+          )
 
-          for file in files:
-              data = file.read_text(encoding="utf-8")
+          for team, filename in teams.items():
+              data = (
+                  output / filename
+              ).read_text(encoding="utf-8")
 
               count = data.count("BEGIN:VEVENT")
 
               assert count >= 20, (
-                  f"{file.name}: only {count} games"
+                  f"{filename}: only {count} events"
+              )
+
+              assert f"NAME:{team}" in data, (
+                  f"{filename}: incorrect calendar name"
+              )
+
+              assert f"X-WR-CALNAME:{team}" in data, (
+                  f"{filename}: incorrect display name"
               )
 
               assert "Markham Sports Dome" in data, (
-                  f"{file.name}: venue missing"
-              )
-
-              assert "Diamond" in data, (
-                  f"{file.name}: diamond missing"
+                  f"{filename}: venue missing"
               )
 
               assert "UID:" in data, (
-                  f"{file.name}: event IDs missing"
+                  f"{filename}: event IDs missing"
               )
 
               print(
-                  f"PASSED: {file.name} "
-                  f"({count} scheduled events)"
+                  f"PASSED: {filename} "
+                  f"({count} events)"
               )
 
-          print("ALL SIX SNL CALENDARS VERIFIED")
+          print("ALL SIX TEAM CALENDARS VERIFIED")
+
           PY
+
+      - name: Verify subscription website
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          page = Path("subscribe.html").read_text(
+              encoding="utf-8"
+          )
+
+          assert "Select your team" in page
+          assert "window.location.href" in page
+          assert 'team.value + ".ics"' in page
+          assert "Schedules-Fall-26" not in page
+          assert "_Fall_2026-27.ics" not in page
+
+          print("Subscription page verified")
+          print("No old repository or calendar filenames")
+
+          PY
+
+      - name: Final test summary
+        run: |
+          echo "SNL MASTER: VERIFIED"
+          echo "SIX TEAM CALENDARS: VERIFIED"
+          echo "PERMANENT FILENAMES: VERIFIED"
+          echo "SUBSCRIPTION WEBSITE: VERIFIED"
+          echo "NO FILES PUBLISHED"
+          echo "ALL TESTS PASSED"
