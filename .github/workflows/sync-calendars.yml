@@ -119,6 +119,47 @@ jobs:
           print("All six SNL calendars verified")
           PY
 
+      - name: Generate website schedule and standings data
+        run: |
+          python scripts/generate_website_data.py \
+            "SNL Master.xlsx" \
+            --output public/site-data.json
+
+      - name: Verify website data
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("public/site-data.json")
+
+          if not path.is_file():
+              raise SystemExit(
+                  "Website data file missing"
+              )
+
+          data = json.loads(
+              path.read_text(encoding="utf-8")
+          )
+
+          if len(data["regularSeason"]) != 60:
+              raise SystemExit(
+                  "Expected 60 regular-season games"
+              )
+
+          if len(data["standings"]) != 6:
+              raise SystemExit(
+                  "Expected 6 teams in standings"
+              )
+
+          if len(data["playoffs"]) != 15:
+              raise SystemExit(
+                  "Expected 15 playoff game slots"
+              )
+
+          print("SNL website data verified")
+          PY
+
       - name: Add subscription website
         run: |
           cp subscribe.html public/subscribe.html
@@ -139,6 +180,7 @@ jobs:
               "Outcasts.ics",
               "Pacific_Maul.ics",
               "Toronto_Raccoons.ics",
+              "site-data.json",
           ]
 
           for filename in required:
