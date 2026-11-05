@@ -160,30 +160,6 @@ jobs:
           print("SNL website data verified")
           PY
 
-      # SNL GAMECHANGER STATISTICS
-      # Separate from the Master workbook.
-      # All season CSVs are downloaded and validated.
-      # No player statistics are published yet.
-
-      - name: Download SNL statistics from OneDrive
-        id: stats_download
-        continue-on-error: true
-        env:
-          MS_CLIENT_ID: ${{ secrets.MS_CLIENT_ID }}
-          MSAL_CACHE: ${{ secrets.MSAL_CACHE }}
-        run: |
-          python scripts/download_stats.py
-
-      - name: Validate SNL batting statistics
-        if: ${{ steps.stats_download.outcome == 'success' }}
-        continue-on-error: true
-        run: |
-          python scripts/generate_stats_data.py \
-            --input-dir stats-input \
-            --audit-output stats-audit.json
-
-      # END SNL STATISTICS
-
       - name: Add subscription website
         run: |
           cp subscribe.html public/subscribe.html
