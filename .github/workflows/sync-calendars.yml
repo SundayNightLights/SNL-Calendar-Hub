@@ -3,6 +3,11 @@ name: Sync SNL Calendars
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/generate_website_data.py"
+      - ".github/workflows/sync-calendars.yml"
   schedule:
     - cron: '*/15 * * * *'
 

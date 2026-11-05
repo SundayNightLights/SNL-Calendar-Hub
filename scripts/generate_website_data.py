@@ -168,6 +168,65 @@ def fetch_games(sheet, kind):
     return [game for number, game in sorted(games)]
 
 
+
+def apply_master_scores(games, master_rows):
+    """Use actual yellow Master Schedule score inputs, not formula caches.
+
+    Excel Online can save formulas in Regular Season Data without their cached
+    values. The Master Schedule G/H cells are the authoritative score entries.
+    Match by week and both team names, not a fragile worksheet row number.
+    """
+    scores = {}
+    for row_number, record in master_rows.items():
+        raw_week = string(record, "A")
+        away_name = string(record, "E")
+        home_name = string(record, "F")
+        if not re.fullmatch(r"\d+", raw_week):
+            continue
+        week = int(raw_week)
+        if not 1 <= week <= 10 or away_name not in TEAM_IDS or home_name not in TEAM_IDS:
+            continue
+        key = (week, TEAM_IDS[away_name], TEAM_IDS[home_name])
+        if key in scores:
+            raise ValueError(f"Duplicate Master Schedule matchup: {key}")
+        label = f"Master Schedule row {row_number}"
+        away_score = nonnegative_score(string(record, "G"), label)
+        home_score = nonnegative_score(string(record, "H"), label)
+        if (away_score is None) != (home_score is None):
+            # Only publish a result when both scores have been entered.
+            away_score = home_score = None
+        scores[key] = (away_score, home_score)
+
+    expected = {(g["week"], g["away"], g["home"]) for g in games}
+    if len(expected) != len(games) or set(scores) != expected:
+        missing = sorted(expected - set(scores))
+        extra = sorted(set(scores) - expected)
+        raise ValueError(
+            f"Master Schedule does not match regular-season game data: "
+            f"{len(missing)} missing, {len(extra)} unexpected; "
+            f"sample missing: {missing[:3]}, sample unexpected: {extra[:3]}"
+        )
+
+    for game in games:
+        key = (game["week"], game["away"], game["home"])
+        away_score, home_score = scores[key]
+        finished = away_score is not None and home_score is not None
+        game["awayScore"] = away_score
+        game["homeScore"] = home_score
+        game["status"] = "Final" if finished else "Unplayed"
+        if finished:
+            game["awayPoints"] = 2 if away_score > home_score else 1 if away_score == home_score else 0
+            game["homePoints"] = 2 if home_score > away_score else 1 if away_score == home_score else 0
+            diff = max(-7, min(7, away_score - home_score))
+            game["awayCappedRD"] = diff
+            game["homeCappedRD"] = -diff
+        else:
+            game["awayPoints"] = None
+            game["homePoints"] = None
+            game["awayCappedRD"] = None
+            game["homeCappedRD"] = None
+    return games
+
 def calculate_standings(games):
     rows = {
         team: {
@@ -238,6 +297,8 @@ def export(workbook, output):
     regular = read_sheet(workbook, "Regular Season Data")
     playoffs = read_sheet(workbook, "Playoff Data")
     regular_games = fetch_games(regular, "regular")
+    master = read_sheet(workbook, "Master Schedule")
+    apply_master_scores(regular_games, master)
     playoff_games = fetch_games(playoffs, "playoff")
     finals = sum(g["status"] == "Final" for g in regular_games)
     payload = {
