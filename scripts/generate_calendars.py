@@ -143,7 +143,59 @@ def read_sheet(path, name):
 
             result[int(row.get("r"))] = values
 
-        return result
+
+        return normalize_game_columns(result, name)
+
+
+def normalize_game_columns(rows, name):
+    """Accept both SNL game-data column layouts without changing callers.
+
+    Calendar generation and website export use the original A:J positions
+    internally. Normalize the rearranged workbook at the input boundary so
+    existing event UIDs, playoff logic, and website calculations stay intact.
+    """
+    if name not in ("Regular Season Data", "Playoff Data"):
+        return rows
+
+    headers = {key: str(value).strip() for key, value in rows.get(4, {}).items()}
+    if (
+        headers.get("C") == "Away Team"
+        and headers.get("D") == "Home Team"
+        and headers.get("E") == "Date"
+        and headers.get("I") == "Away Score"
+    ):
+        return rows
+
+    if not (
+        headers.get("C") == "Date"
+        and headers.get("D") == "Time"
+        and headers.get("E") == "Slot"
+        and headers.get("F") == "Diamond"
+        and headers.get("G") == "Away Team"
+        and headers.get("H") == "Home Team"
+        and headers.get("I") == "Game Status"
+        and headers.get("J") == "Away Score"
+        and headers.get("K") == "Home Score"
+    ):
+        raise ValueError(f"{name}: unrecognized game-data column layout")
+
+    # Left: legacy/canonical position; right: column in the new workbook.
+    legacy_to_new = {
+        "A": "A", "B": "B", "C": "G", "D": "H", "E": "C",
+        "F": "D", "G": "E", "H": "F", "I": "J", "J": "K",
+        "K": "L", "L": "M", "M": "I",
+    }
+
+    return {
+        row_number: {
+            **record,
+            **{
+                legacy: record.get(current, "")
+                for legacy, current in legacy_to_new.items()
+            },
+        }
+        for row_number, record in rows.items()
+    }
 
 
 def legacy_rows(regular, playoffs):
