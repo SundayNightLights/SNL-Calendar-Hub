@@ -70,7 +70,7 @@ def date_times(record, game_id):
     starts = dt.datetime.strptime(start, "%Y%m%dT%H%M%S")
     ends = dt.datetime.strptime(end, "%Y%m%dT%H%M%S")
     diamond_name = string(record, "H")
-    match = re.match(r"^([12])(?:\b|\s*\()", diamond_name)
+    match = re.match(r"^(?:Diamond\s+)?([12])\b", diamond_name, re.I)
     if not match:
         raise ValueError(f"{game_id}: invalid diamond {diamond_name!r}")
     diamond = int(match.group(1))
