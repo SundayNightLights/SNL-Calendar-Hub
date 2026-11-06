@@ -11,8 +11,8 @@ import msal
 import requests
 
 
-# Workbook name in OneDrive and GitHub Actions
-ONEDRIVE_FILENAME = "SNL Master.xlsx"
+# Select the canonical workbook even when other copies use the same name.
+ONEDRIVE_PATH = "/SNL/SNL Master.xlsx"
 LOCAL_FILENAME = "SNL Master.xlsx"
 
 
@@ -92,10 +92,7 @@ while folders:
             if name.lower().endswith(".xlsx"):
                 excel_files.append(path)
 
-            if (
-                name.casefold()
-                == ONEDRIVE_FILENAME.casefold()
-            ):
+            if path.casefold() == ONEDRIVE_PATH.casefold():
                 matches.append((item, path))
 
 
@@ -107,8 +104,8 @@ if len(matches) != 1:
         print(" ", path)
 
     raise RuntimeError(
-        f"Expected exactly one workbook named "
-        f"{ONEDRIVE_FILENAME!r}, "
+        f"Expected exactly one workbook at "
+        f"{ONEDRIVE_PATH!r}, "
         f"but found {len(matches)}."
     )
 
