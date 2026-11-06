@@ -1,0 +1,24 @@
+name: Test SNL workbook adapter
+
+on:
+  pull_request:
+    paths:
+      - "scripts/generate_calendars.py"
+      - "scripts/generate_website_data.py"
+      - "tests/test_game_data_compat.py"
+      - ".github/workflows/test-workbook-adapter.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check old/new Excel layouts and diamond labels
+        run: python -m unittest discover -s tests -p 'test_game_data_compat.py' -v
