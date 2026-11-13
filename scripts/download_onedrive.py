@@ -5,7 +5,7 @@ import io
 import os
 import zipfile
 from pathlib import Path
-from urllib.parse import quote
+from urllib.parse import parse_qs, quote, urlsplit
 
 import msal
 import requests
@@ -114,30 +114,88 @@ item, path = matches[0]
 print("Found workbook:", path)
 
 
-# Download the workbook
+# Download via a fresh Microsoft Graph redirect. Microsoft Graph returns a
+# short-lived, preauthorized URL. For some OneDrive Personal accounts the
+# my.microsoftpersonalcontent.com endpoint requires the URL's *tempauth*
+# credential as a Bearer header (not the Graph OAuth token).
+#
+# Keep OAuth tokens confined to graph.microsoft.com. Never log the signed URL,
+# tempauth query value, or response exception (which may include the signed URL).
 file_id = quote(item["id"], safe="")
-url = f"{BASE}/items/{file_id}/content"
+graph_content_url = f"{BASE}/items/{file_id}/content"
+downloaded = None
 
-response = session.get(url, timeout=90)
-response.raise_for_status()
+for attempt in range(1, 4):
+    graph_response = session.get(
+        graph_content_url, timeout=90, allow_redirects=False
+    )
+    if graph_response.status_code == 200:
+        downloaded = graph_response.content
+        break
+    if graph_response.status_code not in (301, 302, 303, 307, 308):
+        raise RuntimeError(
+            "Graph could not provide the workbook (HTTP "
+            f"{graph_response.status_code})."
+        )
+
+    signed_url = graph_response.headers.get("Location", "")
+    parts = urlsplit(signed_url)
+    if parts.scheme != "https" or not parts.hostname:
+        raise RuntimeError("Graph returned an invalid download redirect")
+
+    status = "network error"
+    try:
+        # A separate request prevents forwarding the Graph OAuth bearer token.
+        result = requests.get(signed_url, timeout=90)
+        status = str(result.status_code)
+        if result.ok:
+            downloaded = result.content
+            break
+
+        if (
+            result.status_code in (401, 403)
+            and parts.hostname.lower() == "my.microsoftpersonalcontent.com"
+        ):
+            temp_auth = parse_qs(parts.query).get("tempauth", [None])[0]
+            if temp_auth:
+                # Workaround for OneDrive Personal's 401 on download.aspx.
+                result = requests.get(
+                    signed_url,
+                    headers={"Authorization": "Bearer " + temp_auth},
+                    timeout=90,
+                )
+                status = str(result.status_code)
+                if result.ok:
+                    downloaded = result.content
+                    break
+    except requests.RequestException:
+        # Requests exceptions can contain the secret query string.
+        pass
+
+    print(
+        f"OneDrive download attempt {attempt}/3 failed "
+        f"(HTTP {status}); requesting a fresh link."
+    )
+
+if downloaded is None:
+    raise RuntimeError(
+        "OneDrive returned unusable download links after three attempts. "
+        "The workbook was not published; verify OneDrive permissions."
+    )
 
 
 # Verify it is a valid Excel workbook
-with zipfile.ZipFile(
-    io.BytesIO(response.content)
-) as z:
+with zipfile.ZipFile(io.BytesIO(downloaded)) as z:
     if "xl/workbook.xml" not in z.namelist():
-        raise ValueError(
-            "Downloaded file is not a valid Excel workbook"
-        )
+        raise ValueError("Downloaded file is not a valid Excel workbook")
 
 
 # Save with permanent filename
-Path(LOCAL_FILENAME).write_bytes(response.content)
+Path(LOCAL_FILENAME).write_bytes(downloaded)
 
 print(
     "Workbook downloaded successfully:",
     LOCAL_FILENAME,
-    len(response.content),
+    len(downloaded),
     "bytes",
 )
