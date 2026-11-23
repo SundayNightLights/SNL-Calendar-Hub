@@ -1,0 +1,1098 @@
+{
+  "generated_at_utc": "2026-11-23T07:47:06.141952+00:00",
+  "current_season": "F26",
+  "notice": "Batting statistics are voluntarily submitted to GameChanger by participating teams; non-reporting teams are not included in leaderboards.",
+  "seasons": [
+    {
+      "season_id": "F26",
+      "season_label": "Fall 2026",
+      "teams": [
+        {
+          "team_id": "buffaloes",
+          "name": "Buffaloes",
+          "reporting_status": "stats_available",
+          "players_with_batting_stats": 17
+        },
+        {
+          "team_id": "iht",
+          "name": "IHT",
+          "reporting_status": "not_submitted",
+          "players_with_batting_stats": 0
+        },
+        {
+          "team_id": "morsl",
+          "name": "MORSL",
+          "reporting_status": "stats_available",
+          "players_with_batting_stats": 13
+        },
+        {
+          "team_id": "outcasts",
+          "name": "Outcasts",
+          "reporting_status": "not_submitted",
+          "players_with_batting_stats": 0
+        },
+        {
+          "team_id": "pacific-maul",
+          "name": "Pacific Maul",
+          "reporting_status": "stats_available",
+          "players_with_batting_stats": 13
+        },
+        {
+          "team_id": "toronto-raccoons",
+          "name": "Toronto Raccoons",
+          "reporting_status": "stats_available",
+          "players_with_batting_stats": 12
+        }
+      ],
+      "player_count": 55,
+      "reporting_team_count": 4,
+      "players": [
+        {
+          "name": "Andre Tsang",
+          "team_id": "buffaloes",
+          "team": "Buffaloes",
+          "stats": {
+            "GP": 4,
+            "PA": 14,
+            "AVG": 0.583,
+            "QAB": 9,
+            "RBI": 12,
+            "H": 7,
+            "OBP": 0.571,
+            "SLG": 1.167,
+            "OPS": 1.738,
+            "2B": 3,
+            "3B": 2,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Bruce Lee",
+          "team_id": "buffaloes",
+          "team": "Buffaloes",
+          "stats": {
+            "GP": 2,
+            "PA": 5,
+            "AVG": 0.8,
+            "QAB": 2,
+            "RBI": 2,
+            "H": 4,
+            "OBP": 0.8,
+            "SLG": 1.0,
+            "OPS": 1.8,
+            "2B": 1,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Chris Leung",
+          "team_id": "buffaloes",
+          "team": "Buffaloes",
+          "stats": {
+            "GP": 4,
+            "PA": 13,
+            "AVG": 0.25,
+            "QAB": 2,
+            "RBI": 1,
+            "H": 3,
+            "OBP": 0.308,
+            "SLG": 0.25,
+            "OPS": 0.558,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Dummie Ryan Cheung",
+          "team_id": "buffaloes",
+          "team": "Buffaloes",
+          "stats": {
+            "GP": 6,
+            "PA": 20,
+            "AVG": 0.353,
+            "QAB": 8,
+            "RBI": 6,
+            "H": 6,
+            "OBP": 0.45,
+            "SLG": 0.647,
+            "OPS": 1.097,
+            "2B": 1,
+            "3B": 2,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Eric Cheung",
+          "team_id": "buffaloes",
+          "team": "Buffaloes",
+          "stats": {
+            "GP": 6,
+            "PA": 20,
+            "AVG": 0.579,
+            "QAB": 8,
+            "RBI": 8,
+            "H": 11,
+            "OBP": 0.6,
+            "SLG": 0.737,
+            "OPS": 1.337,
+            "2B": 0,
+            "3B": 0,
+            "HR": 1
+          }
+        },
+        {
+          "name": "Geoff Tsang",
+          "team_id": "buffaloes",
+          "team": "Buffaloes",
+          "stats": {
+            "GP": 6,
+            "PA": 22,
+            "AVG": 0.714,
+            "QAB": 9,
+            "RBI": 5,
+            "H": 15,
+            "OBP": 0.682,
+            "SLG": 1.0,
+            "OPS": 1.682,
+            "2B": 4,
+            "3B": 1,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Jason Chiu",
+          "team_id": "buffaloes",
+          "team": "Buffaloes",
+          "stats": {
+            "GP": 1,
+            "PA": 3,
+            "AVG": 1.0,
+            "QAB": 1,
+            "RBI": 0,
+            "H": 3,
+            "OBP": 1.0,
+            "SLG": 1.667,
+            "OPS": 2.667,
+            "2B": 0,
+            "3B": 1,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Jesse Tan",
+          "team_id": "buffaloes",
+          "team": "Buffaloes",
+          "stats": {
+            "GP": 2,
+            "PA": 7,
+            "AVG": 1.0,
+            "QAB": 4,
+            "RBI": 4,
+            "H": 7,
+            "OBP": 1.0,
+            "SLG": 2.143,
+            "OPS": 3.143,
+            "2B": 1,
+            "3B": 2,
+            "HR": 1
+          }
+        },
+        {
+          "name": "Joe Woo",
+          "team_id": "buffaloes",
+          "team": "Buffaloes",
+          "stats": {
+            "GP": 6,
+            "PA": 21,
+            "AVG": 0.65,
+            "QAB": 7,
+            "RBI": 11,
+            "H": 13,
+            "OBP": 0.667,
+            "SLG": 0.95,
+            "OPS": 1.617,
+            "2B": 0,
+            "3B": 0,
+            "HR": 2
+          }
+        },
+        {
+          "name": "Josh Martinez",
+          "team_id": "buffaloes",
+          "team": "Buffaloes",
+          "stats": {
+            "GP": 5,
+            "PA": 17,
+            "AVG": 0.647,
+            "QAB": 4,
+            "RBI": 3,
+            "H": 11,
+            "OBP": 0.647,
+            "SLG": 0.647,
+            "OPS": 1.294,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Kevin Cheung",
+          "team_id": "buffaloes",
+          "team": "Buffaloes",
+          "stats": {
+            "GP": 1,
+            "PA": 3,
+            "AVG": 0.0,
+            "QAB": 1,
+            "RBI": 0,
+            "H": 0,
+            "OBP": 0.0,
+            "SLG": 0.0,
+            "OPS": 0.0,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Lucas Heathcote",
+          "team_id": "buffaloes",
+          "team": "Buffaloes",
+          "stats": {
+            "GP": 6,
+            "PA": 21,
+            "AVG": 0.789,
+            "QAB": 12,
+            "RBI": 7,
+            "H": 15,
+            "OBP": 0.81,
+            "SLG": 1.0,
+            "OPS": 1.81,
+            "2B": 4,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Paul Yoon",
+          "team_id": "buffaloes",
+          "team": "Buffaloes",
+          "stats": {
+            "GP": 5,
+            "PA": 15,
+            "AVG": 0.429,
+            "QAB": 2,
+            "RBI": 2,
+            "H": 6,
+            "OBP": 0.4,
+            "SLG": 0.429,
+            "OPS": 0.829,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Terrence Sun",
+          "team_id": "buffaloes",
+          "team": "Buffaloes",
+          "stats": {
+            "GP": 1,
+            "PA": 3,
+            "AVG": 0.667,
+            "QAB": 1,
+            "RBI": 2,
+            "H": 2,
+            "OBP": 0.667,
+            "SLG": 0.667,
+            "OPS": 1.333,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Tim Ko",
+          "team_id": "buffaloes",
+          "team": "Buffaloes",
+          "stats": {
+            "GP": 6,
+            "PA": 19,
+            "AVG": 0.632,
+            "QAB": 4,
+            "RBI": 2,
+            "H": 12,
+            "OBP": 0.632,
+            "SLG": 0.632,
+            "OPS": 1.263,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Tristan Li",
+          "team_id": "buffaloes",
+          "team": "Buffaloes",
+          "stats": {
+            "GP": 1,
+            "PA": 3,
+            "AVG": 0.5,
+            "QAB": 1,
+            "RBI": 0,
+            "H": 1,
+            "OBP": 0.667,
+            "SLG": 0.5,
+            "OPS": 1.167,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Winston Kee",
+          "team_id": "buffaloes",
+          "team": "Buffaloes",
+          "stats": {
+            "GP": 2,
+            "PA": 6,
+            "AVG": 0.833,
+            "QAB": 3,
+            "RBI": 3,
+            "H": 5,
+            "OBP": 0.833,
+            "SLG": 0.833,
+            "OPS": 1.667,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Domingo",
+          "team_id": "morsl",
+          "team": "MORSL",
+          "stats": {
+            "GP": 6,
+            "PA": 16,
+            "AVG": 0.667,
+            "QAB": 3,
+            "RBI": 6,
+            "H": 10,
+            "OBP": 0.688,
+            "SLG": 0.667,
+            "OPS": 1.354,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Giancarlos",
+          "team_id": "morsl",
+          "team": "MORSL",
+          "stats": {
+            "GP": 5,
+            "PA": 13,
+            "AVG": 0.417,
+            "QAB": 4,
+            "RBI": 6,
+            "H": 5,
+            "OBP": 0.462,
+            "SLG": 0.917,
+            "OPS": 1.378,
+            "2B": 0,
+            "3B": 0,
+            "HR": 2
+          }
+        },
+        {
+          "name": "Haran Raj",
+          "team_id": "morsl",
+          "team": "MORSL",
+          "stats": {
+            "GP": 6,
+            "PA": 14,
+            "AVG": 0.154,
+            "QAB": 1,
+            "RBI": 0,
+            "H": 2,
+            "OBP": 0.214,
+            "SLG": 0.154,
+            "OPS": 0.368,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "James",
+          "team_id": "morsl",
+          "team": "MORSL",
+          "stats": {
+            "GP": 5,
+            "PA": 13,
+            "AVG": 0.462,
+            "QAB": 3,
+            "RBI": 5,
+            "H": 6,
+            "OBP": 0.462,
+            "SLG": 0.462,
+            "OPS": 0.923,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Mario",
+          "team_id": "morsl",
+          "team": "MORSL",
+          "stats": {
+            "GP": 6,
+            "PA": 17,
+            "AVG": 0.529,
+            "QAB": 5,
+            "RBI": 4,
+            "H": 9,
+            "OBP": 0.529,
+            "SLG": 0.941,
+            "OPS": 1.471,
+            "2B": 2,
+            "3B": 1,
+            "HR": 1
+          }
+        },
+        {
+          "name": "Rob",
+          "team_id": "morsl",
+          "team": "MORSL",
+          "stats": {
+            "GP": 5,
+            "PA": 10,
+            "AVG": 0.3,
+            "QAB": 3,
+            "RBI": 0,
+            "H": 3,
+            "OBP": 0.3,
+            "SLG": 0.3,
+            "OPS": 0.6,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Sam",
+          "team_id": "morsl",
+          "team": "MORSL",
+          "stats": {
+            "GP": 6,
+            "PA": 14,
+            "AVG": 0.231,
+            "QAB": 5,
+            "RBI": 2,
+            "H": 3,
+            "OBP": 0.286,
+            "SLG": 0.385,
+            "OPS": 0.67,
+            "2B": 2,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Stephen C",
+          "team_id": "morsl",
+          "team": "MORSL",
+          "stats": {
+            "GP": 4,
+            "PA": 12,
+            "AVG": 0.667,
+            "QAB": 3,
+            "RBI": 7,
+            "H": 8,
+            "OBP": 0.667,
+            "SLG": 1.167,
+            "OPS": 1.833,
+            "2B": 0,
+            "3B": 0,
+            "HR": 2
+          }
+        },
+        {
+          "name": "Steve S",
+          "team_id": "morsl",
+          "team": "MORSL",
+          "stats": {
+            "GP": 6,
+            "PA": 14,
+            "AVG": 0.333,
+            "QAB": 5,
+            "RBI": 2,
+            "H": 4,
+            "OBP": 0.429,
+            "SLG": 0.583,
+            "OPS": 1.012,
+            "2B": 0,
+            "3B": 0,
+            "HR": 1
+          }
+        },
+        {
+          "name": "Suvee",
+          "team_id": "morsl",
+          "team": "MORSL",
+          "stats": {
+            "GP": 4,
+            "PA": 11,
+            "AVG": 0.5,
+            "QAB": 5,
+            "RBI": 2,
+            "H": 5,
+            "OBP": 0.545,
+            "SLG": 0.8,
+            "OPS": 1.345,
+            "2B": 0,
+            "3B": 0,
+            "HR": 1
+          }
+        },
+        {
+          "name": "Terry",
+          "team_id": "morsl",
+          "team": "MORSL",
+          "stats": {
+            "GP": 6,
+            "PA": 12,
+            "AVG": 0.111,
+            "QAB": 4,
+            "RBI": 0,
+            "H": 1,
+            "OBP": 0.333,
+            "SLG": 0.111,
+            "OPS": 0.444,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Tim",
+          "team_id": "morsl",
+          "team": "MORSL",
+          "stats": {
+            "GP": 6,
+            "PA": 14,
+            "AVG": 0.6,
+            "QAB": 6,
+            "RBI": 0,
+            "H": 6,
+            "OBP": 0.714,
+            "SLG": 0.6,
+            "OPS": 1.314,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Tony",
+          "team_id": "morsl",
+          "team": "MORSL",
+          "stats": {
+            "GP": 6,
+            "PA": 13,
+            "AVG": 0.417,
+            "QAB": 2,
+            "RBI": 0,
+            "H": 5,
+            "OBP": 0.462,
+            "SLG": 0.417,
+            "OPS": 0.878,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Alfred Georgi",
+          "team_id": "pacific-maul",
+          "team": "Pacific Maul",
+          "stats": {
+            "GP": 5,
+            "PA": 15,
+            "AVG": 0.417,
+            "QAB": 9,
+            "RBI": 3,
+            "H": 5,
+            "OBP": 0.467,
+            "SLG": 0.75,
+            "OPS": 1.217,
+            "2B": 2,
+            "3B": 1,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Dalton Wong",
+          "team_id": "pacific-maul",
+          "team": "Pacific Maul",
+          "stats": {
+            "GP": 5,
+            "PA": 14,
+            "AVG": 0.571,
+            "QAB": 5,
+            "RBI": 6,
+            "H": 8,
+            "OBP": 0.571,
+            "SLG": 0.643,
+            "OPS": 1.214,
+            "2B": 1,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Ian U",
+          "team_id": "pacific-maul",
+          "team": "Pacific Maul",
+          "stats": {
+            "GP": 6,
+            "PA": 16,
+            "AVG": 0.286,
+            "QAB": 8,
+            "RBI": 2,
+            "H": 4,
+            "OBP": 0.375,
+            "SLG": 0.429,
+            "OPS": 0.804,
+            "2B": 2,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Jaemmy Alcance",
+          "team_id": "pacific-maul",
+          "team": "Pacific Maul",
+          "stats": {
+            "GP": 1,
+            "PA": 1,
+            "AVG": 0.0,
+            "QAB": 1,
+            "RBI": 0,
+            "H": 0,
+            "OBP": 0.0,
+            "SLG": 0.0,
+            "OPS": 0.0,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Jason Linsao",
+          "team_id": "pacific-maul",
+          "team": "Pacific Maul",
+          "stats": {
+            "GP": 6,
+            "PA": 15,
+            "AVG": 0.733,
+            "QAB": 7,
+            "RBI": 2,
+            "H": 11,
+            "OBP": 0.733,
+            "SLG": 0.8,
+            "OPS": 1.533,
+            "2B": 1,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Kevin Pingol",
+          "team_id": "pacific-maul",
+          "team": "Pacific Maul",
+          "stats": {
+            "GP": 6,
+            "PA": 16,
+            "AVG": 0.467,
+            "QAB": 8,
+            "RBI": 9,
+            "H": 7,
+            "OBP": 0.438,
+            "SLG": 0.867,
+            "OPS": 1.304,
+            "2B": 3,
+            "3B": 0,
+            "HR": 1
+          }
+        },
+        {
+          "name": "Marius Ng",
+          "team_id": "pacific-maul",
+          "team": "Pacific Maul",
+          "stats": {
+            "GP": 5,
+            "PA": 11,
+            "AVG": 0.455,
+            "QAB": 4,
+            "RBI": 2,
+            "H": 5,
+            "OBP": 0.455,
+            "SLG": 0.545,
+            "OPS": 1.0,
+            "2B": 1,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Mark Sfetkopoulos",
+          "team_id": "pacific-maul",
+          "team": "Pacific Maul",
+          "stats": {
+            "GP": 4,
+            "PA": 12,
+            "AVG": 0.3,
+            "QAB": 8,
+            "RBI": 0,
+            "H": 3,
+            "OBP": 0.417,
+            "SLG": 0.3,
+            "OPS": 0.717,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Matthew Pang",
+          "team_id": "pacific-maul",
+          "team": "Pacific Maul",
+          "stats": {
+            "GP": 6,
+            "PA": 14,
+            "AVG": 0.643,
+            "QAB": 5,
+            "RBI": 0,
+            "H": 9,
+            "OBP": 0.643,
+            "SLG": 0.643,
+            "OPS": 1.286,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Nelson Chung",
+          "team_id": "pacific-maul",
+          "team": "Pacific Maul",
+          "stats": {
+            "GP": 6,
+            "PA": 15,
+            "AVG": 0.308,
+            "QAB": 6,
+            "RBI": 3,
+            "H": 4,
+            "OBP": 0.4,
+            "SLG": 0.462,
+            "OPS": 0.862,
+            "2B": 0,
+            "3B": 1,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Steven Chan",
+          "team_id": "pacific-maul",
+          "team": "Pacific Maul",
+          "stats": {
+            "GP": 5,
+            "PA": 16,
+            "AVG": 0.563,
+            "QAB": 10,
+            "RBI": 7,
+            "H": 9,
+            "OBP": 0.563,
+            "SLG": 0.813,
+            "OPS": 1.375,
+            "2B": 2,
+            "3B": 1,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Terence Sun",
+          "team_id": "pacific-maul",
+          "team": "Pacific Maul",
+          "stats": {
+            "GP": 5,
+            "PA": 16,
+            "AVG": 0.5,
+            "QAB": 6,
+            "RBI": 8,
+            "H": 8,
+            "OBP": 0.5,
+            "SLG": 0.875,
+            "OPS": 1.375,
+            "2B": 1,
+            "3B": 1,
+            "HR": 1
+          }
+        },
+        {
+          "name": "Vince Lam",
+          "team_id": "pacific-maul",
+          "team": "Pacific Maul",
+          "stats": {
+            "GP": 5,
+            "PA": 13,
+            "AVG": 0.455,
+            "QAB": 4,
+            "RBI": 2,
+            "H": 5,
+            "OBP": 0.538,
+            "SLG": 0.455,
+            "OPS": 0.993,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Adhipan Sivakumaran",
+          "team_id": "toronto-raccoons",
+          "team": "Toronto Raccoons",
+          "stats": {
+            "GP": 1,
+            "PA": 2,
+            "AVG": 0.0,
+            "QAB": 2,
+            "RBI": 0,
+            "H": 0,
+            "OBP": 0.0,
+            "SLG": 0.0,
+            "OPS": 0.0,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Grishna",
+          "team_id": "toronto-raccoons",
+          "team": "Toronto Raccoons",
+          "stats": {
+            "GP": 1,
+            "PA": 2,
+            "AVG": 0.0,
+            "QAB": 0,
+            "RBI": 1,
+            "H": 0,
+            "OBP": 0.0,
+            "SLG": 0.0,
+            "OPS": 0.0,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Janan Thanabalasingam",
+          "team_id": "toronto-raccoons",
+          "team": "Toronto Raccoons",
+          "stats": {
+            "GP": 1,
+            "PA": 3,
+            "AVG": 0.667,
+            "QAB": 2,
+            "RBI": 3,
+            "H": 2,
+            "OBP": 0.667,
+            "SLG": 1.333,
+            "OPS": 2.0,
+            "2B": 0,
+            "3B": 1,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Justin",
+          "team_id": "toronto-raccoons",
+          "team": "Toronto Raccoons",
+          "stats": {
+            "GP": 1,
+            "PA": 2,
+            "AVG": 0.5,
+            "QAB": 1,
+            "RBI": 0,
+            "H": 1,
+            "OBP": 0.5,
+            "SLG": 0.5,
+            "OPS": 1.0,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Kevin",
+          "team_id": "toronto-raccoons",
+          "team": "Toronto Raccoons",
+          "stats": {
+            "GP": 1,
+            "PA": 3,
+            "AVG": 0.667,
+            "QAB": 2,
+            "RBI": 0,
+            "H": 2,
+            "OBP": 0.667,
+            "SLG": 0.667,
+            "OPS": 1.333,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Kugan",
+          "team_id": "toronto-raccoons",
+          "team": "Toronto Raccoons",
+          "stats": {
+            "GP": 1,
+            "PA": 3,
+            "AVG": 0.667,
+            "QAB": 3,
+            "RBI": 1,
+            "H": 2,
+            "OBP": 0.667,
+            "SLG": 1.333,
+            "OPS": 2.0,
+            "2B": 0,
+            "3B": 1,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Neshanth",
+          "team_id": "toronto-raccoons",
+          "team": "Toronto Raccoons",
+          "stats": {
+            "GP": 1,
+            "PA": 2,
+            "AVG": 0.5,
+            "QAB": 0,
+            "RBI": 0,
+            "H": 1,
+            "OBP": 0.5,
+            "SLG": 0.5,
+            "OPS": 1.0,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Partheepan Sivakumaran",
+          "team_id": "toronto-raccoons",
+          "team": "Toronto Raccoons",
+          "stats": {
+            "GP": 1,
+            "PA": 2,
+            "AVG": 0.5,
+            "QAB": 2,
+            "RBI": 0,
+            "H": 1,
+            "OBP": 0.5,
+            "SLG": 0.5,
+            "OPS": 1.0,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Thushanth",
+          "team_id": "toronto-raccoons",
+          "team": "Toronto Raccoons",
+          "stats": {
+            "GP": 1,
+            "PA": 2,
+            "AVG": 0.0,
+            "QAB": 0,
+            "RBI": 0,
+            "H": 0,
+            "OBP": 0.0,
+            "SLG": 0.0,
+            "OPS": 0.0,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Viji",
+          "team_id": "toronto-raccoons",
+          "team": "Toronto Raccoons",
+          "stats": {
+            "GP": 1,
+            "PA": 3,
+            "AVG": 0.0,
+            "QAB": 1,
+            "RBI": 0,
+            "H": 0,
+            "OBP": 0.333,
+            "SLG": 0.0,
+            "OPS": 0.333,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Vino",
+          "team_id": "toronto-raccoons",
+          "team": "Toronto Raccoons",
+          "stats": {
+            "GP": 1,
+            "PA": 2,
+            "AVG": 0.5,
+            "QAB": 2,
+            "RBI": 0,
+            "H": 1,
+            "OBP": 0.5,
+            "SLG": 0.5,
+            "OPS": 1.0,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        },
+        {
+          "name": "Vithushanan Thanalingam",
+          "team_id": "toronto-raccoons",
+          "team": "Toronto Raccoons",
+          "stats": {
+            "GP": 1,
+            "PA": 2,
+            "AVG": 0.0,
+            "QAB": 1,
+            "RBI": 0,
+            "H": 0,
+            "OBP": 0.0,
+            "SLG": 0.0,
+            "OPS": 0.0,
+            "2B": 0,
+            "3B": 0,
+            "HR": 0
+          }
+        }
+      ]
+    }
+  ]
+}
