@@ -1,0 +1,50 @@
+name: One-time public SNL feed snapshot (non-production)
+on:
+  push:
+    branches: [chatgpt-week5-feed-20261123]
+    paths:
+      - ".github/workflows/chatgpt-read-public-feed.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch publicly published feeds (no OneDrive access)
+        shell: bash
+        run: |
+          mkdir -p .chatgpt-week5-snapshot
+          python - <<'PY'
+          import json, urllib.request, datetime, pathlib
+          root = pathlib.Path(".chatgpt-week5-snapshot")
+          sources = {
+            "calendar": "https://sundaynightlights.github.io/SNL-Calendar-Hub/site-data.json",
+            "stats": "https://sundaynightlights.github.io/SNL-Stats-Hub/stats-data.json"
+          }
+          report = {"checked_at_utc": datetime.datetime.now(datetime.timezone.utc).isoformat()}
+          for name,url in sources.items():
+              try:
+                  req = urllib.request.Request(url,headers={"User-Agent":"SNL-Public-Data-Reader/1.0","Cache-Control":"no-cache"})
+                  with urllib.request.urlopen(req,timeout=45) as response:
+                      payload = response.read()
+                  data = json.loads(payload)
+                  (root/(name+".json")).write_text(json.dumps(data,indent=2),encoding="utf-8")
+                  report[name] = {"ok":True,"bytes":len(payload),"generated_at":data.get("generatedAt") or data.get("generated_at_utc")}
+                  print(name,"OK",len(payload),report[name]["generated_at"])
+              except Exception as e:
+                  report[name] = {"ok":False,"error":str(e)[:200]}
+                  print(name,"FAILED",str(e)[:200])
+          (root/"status.json").write_text(json.dumps(report,indent=2),encoding="utf-8")
+          PY
+      - name: Commit snapshot only to diagnostic branch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .chatgpt-week5-snapshot/
+          git commit -m "Save public SNL Week 4 data snapshot for article" || exit 0
+          git push origin HEAD:chatgpt-week5-feed-20261123
